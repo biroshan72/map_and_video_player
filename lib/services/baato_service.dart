@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../models/direction_response.dart';
 
 class BaatoService {
   static const String _baseUrl = 'https://api.baato.io/api/v1';
-  static const String _accessToken = 'bpk.nMaAdtNAPD2vjKNgasqVRQKccb2sfZeLal_Px6kwl_kA'; // Replace with your token
+
+  final  _accessToken = dotenv.env['BAATO_API_KEY'];
+
 
   Future<DirectionResponse> getDirections({
     required LatLng start,

@@ -22,7 +22,6 @@ class VideoPlaybackBloc extends Bloc<VideoPlaybackEvent, VideoPlaybackState> {
     emit(state.copyWith(status: PlaybackStatus.loading));
 
     try {
-      // In a real app, these would be actual file paths from local storage
       final videos = [
         VideoInfo(
           title: "First Video",
@@ -71,8 +70,6 @@ class VideoPlaybackBloc extends Bloc<VideoPlaybackEvent, VideoPlaybackState> {
 
       final videoPath = state.videos[videoIndex].path;
 
-      // For local files, use VideoPlayerController.file()
-      // For assets, use VideoPlayerController.asset()
       _currentController = VideoPlayerController.asset(videoPath);
 
       await _currentController!.initialize();

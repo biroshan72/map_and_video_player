@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import '../blocs/map/map_bloc.dart';
 import '../blocs/map/map_event.dart';
@@ -17,6 +18,8 @@ class _MapScreenState extends State<MapScreen> {
   MapLibreMapController? _controller;
   final Set<Symbol> _symbols = {};
   final Set<Line> _lines = {};
+
+  final  accessToken = dotenv.env['BAATO_API_KEY'];
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,8 @@ class _MapScreenState extends State<MapScreen> {
           return Stack(
             children: [
               MapLibreMap(
-                styleString: 'https://api.baato.io/api/v1/styles/breeze?key=bpk.nMaAdtNAPD2vjKNgasqVRQKccb2sfZeLal_Px6kwl_kA', // Replace with your token
+                styleString: 'https://api.baato.io/api/v1/styles/breeze?key=$accessToken',
+
                 onMapCreated: (MapLibreMapController controller) {
                   _controller = controller;
                   context.read<MapBloc>().add(MapInitialized(controller));
