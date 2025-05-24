@@ -158,7 +158,7 @@ class _MapScreenState extends State<MapScreen> {
       final startSymbol = await _controller!.addSymbol(
         SymbolOptions(
           geometry: state.startPoint!,
-          iconImage: 'marker-15',
+          iconImage: 'marker_15',
           iconColor: '#00FF00', // Green
           iconSize: 2.0,
         ),
@@ -171,7 +171,7 @@ class _MapScreenState extends State<MapScreen> {
       final endSymbol = await _controller!.addSymbol(
         SymbolOptions(
           geometry: state.endPoint!,
-          iconImage: 'marker-15',
+          iconImage: 'marker_15',
           iconColor: '#FF0000', // Red
           iconSize: 2.0,
         ),
