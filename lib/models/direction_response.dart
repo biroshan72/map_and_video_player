@@ -40,7 +40,7 @@ class RouteGeometry extends Equatable {
   });
 
   factory RouteGeometry.fromJson(Map<String, dynamic> json) {
-    final geometry = json['geometry'] as String? ?? '';
+    final geometry = json['encodedPolyline'] as String? ?? '';
     final coordinates = _decodePolyline(geometry);
 
     return RouteGeometry(
