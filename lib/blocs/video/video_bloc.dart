@@ -25,17 +25,17 @@ class VideoPlaybackBloc extends Bloc<VideoPlaybackEvent, VideoPlaybackState> {
       final videos = [
         VideoInfo(
           title: "First Video",
-          path: "assets/videos/video1.mp4", // Replace with actual local path
+          path: "assets/videos/video1.mp4",
           pauseAt: const Duration(seconds: 15),
         ),
         VideoInfo(
           title: "Second Video",
-          path: "assets/videos/video2.mp4", // Replace with actual local path
-          pauseAt: const Duration(seconds: 20),
+          path: "assets/videos/video2.mp4",
+          pauseAt: const Duration(seconds: 5),
         ),
         VideoInfo(
           title: "Third Video",
-          path: "assets/videos/video3.mp4", // Replace with actual local path
+          path: "assets/videos/video3.mp4",
           pauseAt: Duration.zero, // No pause for third video
         ),
       ];
@@ -66,7 +66,11 @@ class VideoPlaybackBloc extends Bloc<VideoPlaybackEvent, VideoPlaybackState> {
       Emitter<VideoPlaybackState> emit,
       ) async {
     try {
-      await _currentController?.dispose();
+      // Dispose of the previous controller and remove listeners
+      if (_currentController != null) {
+        _currentController!.removeListener(_controllerListener);
+        await _currentController!.dispose();
+      }
 
       final videoPath = state.videos[videoIndex].path;
 
@@ -87,15 +91,8 @@ class VideoPlaybackBloc extends Bloc<VideoPlaybackEvent, VideoPlaybackState> {
         currentPosition: Duration.zero,
       ));
 
-      _currentController!.addListener(() {
-        if (_currentController!.value.position != Duration.zero) {
-          add(UpdateProgress(_currentController!.value.position));
-        }
-
-        if (_currentController!.value.position >= _currentController!.value.duration) {
-          add(VideoCompleted());
-        }
-      });
+      // Add listener
+      _currentController!.addListener(_controllerListener);
 
       await _currentController!.play();
     } catch (e) {
@@ -103,6 +100,19 @@ class VideoPlaybackBloc extends Bloc<VideoPlaybackEvent, VideoPlaybackState> {
         status: PlaybackStatus.error,
         errorMessage: e.toString(),
       ));
+    }
+  }
+
+  void _controllerListener() {
+    if (_currentController == null) return;
+
+    final position = _currentController!.value.position;
+    if (position != Duration.zero) {
+      add(UpdateProgress(position));
+    }
+
+    if (position >= _currentController!.value.duration) {
+      add(VideoCompleted());
     }
   }
 
